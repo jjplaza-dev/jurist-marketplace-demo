@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mini-Marketplace
 
-## Getting Started
+Next.js 15 (App Router) + React 19 + Tailwind 3 + Supabase (Postgres + Storage). No login.
 
-First, run the development server:
+## 1. Supabase
+1. Create a project at supabase.com.
+2. SQL Editor -> paste `supabase-schema.sql` -> Run (safe to re-run).
+3. Settings -> API: copy the Project URL and the `anon` public key.
 
+## 2. Run locally
 ```bash
+npm install
+cp .env.example .env.local   # fill in both values
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 3. Deploy to Vercel
+1. Push to GitHub, then import the repo in Vercel.
+2. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` under Project Settings -> Environment Variables.
+3. Deploy and share the public URL.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Routes
+- `/` browse, category sidebar (`?category=`), keyword search (`?q=`)
+- `/create` choose listing type, `/create/item` create listing with photo upload
+- `/item/[id]` listing detail + Message Seller
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Where things are stored
+- Listings: `listings` table. Photos: `listing-images` bucket.
+- Buyer messages: `messages` table. It is insert-only for the public key, so read messages in the
+  Supabase Table Editor (or add an email step later, e.g. a Database Webhook + Resend).
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Prerendering notes
+Pages that read live data (`/` and `/item/[id]`) await `searchParams` / `params` and call
+`await connection()` inside a `<Suspense>` boundary. The shell prerenders; listings stream in per request.
+This works on Next 15 and on Next 16 with `cacheComponents` enabled (no `export const dynamic` is used).

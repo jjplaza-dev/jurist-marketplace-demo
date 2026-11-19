@@ -12,7 +12,7 @@ function href(category: string | null, q?: string) {
 export default function Sidebar({ active, q }: { active?: string; q?: string }) {
   const base = "block whitespace-nowrap rounded-lg px-3 py-2 text-sm transition-colors";
   const on = "bg-fb-soft font-semibold text-fb";
-  const off = "text-gray-800 hover:bg-surface";
+  const off = "text-gray-800 hover:bg-black/5";
 
   return (
     <nav aria-label="Categories" className="md:w-60 md:shrink-0">

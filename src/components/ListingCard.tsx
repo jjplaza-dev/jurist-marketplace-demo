@@ -5,7 +5,7 @@ import { formatPrice } from "@/lib/format";
 export default function ListingCard({ listing }: { listing: Listing }) {
   return (
     <Link href={`/item/${listing.id}`} className="group block">
-      <div className="aspect-square overflow-hidden rounded-xl bg-surface">
+      <div className="aspect-square overflow-hidden rounded-xl bg-gray-200">
         {listing.image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img

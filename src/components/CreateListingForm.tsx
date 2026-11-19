@@ -174,8 +174,8 @@ export default function CreateListingForm() {
 
       <aside aria-label="Listing preview" className="min-w-0">
         <p className="mb-2 text-sm font-semibold text-gray-600">Preview</p>
-        <div className="grid gap-6 rounded-2xl bg-surface p-4 md:grid-cols-[1fr_260px]">
-          <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-white">
+        <div className="grid gap-6 rounded-2xl bg-white p-4 shadow-sm md:grid-cols-[1fr_260px]">
+          <div className="flex aspect-square items-center justify-center overflow-hidden rounded-xl bg-gray-100">
             {preview ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={preview} alt="Preview of your photo" className="h-full w-full object-cover" />

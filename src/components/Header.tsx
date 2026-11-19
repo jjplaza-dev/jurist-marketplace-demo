@@ -1,4 +1,12 @@
 import Link from "next/link";
+import { BellIcon, MailIcon, UserIcon } from "./icons";
+
+// Mail, bell and user are placeholders for now: no handlers, no navigation.
+const ICON_BUTTONS = [
+  { label: "Messages", Icon: MailIcon },
+  { label: "Notifications", Icon: BellIcon },
+  { label: "Account", Icon: UserIcon },
+];
 
 export default function Header() {
   return (
@@ -10,12 +18,25 @@ export default function Header() {
           </span>
           <span className="text-lg font-bold">Marketplace</span>
         </Link>
-        <Link
-          href="/create"
-          className="rounded-md bg-fb px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-fb-dark"
-        >
-          Create listing
-        </Link>
+
+        <div className="flex items-center gap-1 sm:gap-2">
+          <Link
+            href="/create"
+            className="mr-1 rounded-md bg-fb px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-fb-dark sm:mr-2 sm:px-4"
+          >
+            Create listing
+          </Link>
+          {ICON_BUTTONS.map(({ label, Icon }) => (
+            <button
+              key={label}
+              type="button"
+              aria-label={label}
+              className="flex h-10 w-10 items-center justify-center rounded-full text-gray-600 transition-colors hover:bg-gray-100"
+            >
+              <Icon />
+            </button>
+          ))}
+        </div>
       </div>
     </header>
   );
