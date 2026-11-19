@@ -29,6 +29,13 @@ export default function Header() {
           {/* Actions */}
           <div className="flex items-center gap-1 sm:gap-2">
             <Link
+                href="/connect"
+                className="hidden h-10 items-center rounded-md px-3 text-sm font-semibold text-gray-700 hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fb sm:inline-flex"
+            >
+              Get paid
+            </Link>
+
+            <Link
                 href="/create"
                 aria-label="Create listing"
                 className="mr-0.5 inline-flex h-9 items-center justify-center gap-1.5 rounded-full bg-fb px-3 text-sm font-semibold text-white transition-colors hover:bg-fb-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fb focus-visible:ring-offset-2 sm:mr-2 sm:h-10 sm:rounded-md sm:px-4"
