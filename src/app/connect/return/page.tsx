@@ -1,9 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { connection } from "next/server";
-import { getStripe } from "@/lib/stripe";
-import { saveAccountState } from "@/lib/payments";
-import { getAdmin } from "@/lib/supabase-admin";
+import { refreshSeller } from "@/lib/payments";
 
 export const metadata = { title: "Stripe setup · Marketplace" };
 
@@ -27,18 +25,9 @@ async function ReturnContent({ searchParams }: { searchParams: SearchParams }) {
 
   if (accountId.startsWith("acct_")) {
     try {
-      // Only accounts we created for a seller are ever updated.
-      const { data: known } = await getAdmin()
-        .from("sellers")
-        .select("stripe_account_id")
-        .eq("stripe_account_id", accountId)
-        .maybeSingle();
-
-      if (known) {
-        const account = await getStripe().accounts.retrieve(accountId);
-        const seller = await saveAccountState(account);
-        status = seller?.charges_enabled ? "ready" : "incomplete";
-      }
+      // Only accounts we created for a seller are ever looked up (null otherwise).
+      const seller = await refreshSeller(accountId);
+      if (seller) status = seller.charges_enabled ? "ready" : "incomplete";
     } catch (err) {
       console.error("connect return failed", err);
     }

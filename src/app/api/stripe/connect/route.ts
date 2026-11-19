@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { EMAIL_RE } from "@/lib/format";
 import { normalizeEmail } from "@/lib/payments";
-import { getStripe } from "@/lib/stripe";
+import { createConnectedAccount, createOnboardingLink } from "@/lib/stripe";
 import { getAdmin } from "@/lib/supabase-admin";
 
 // POST { email } -> { url } : Stripe-hosted onboarding link for that seller.
@@ -14,7 +14,6 @@ export async function POST(req: Request) {
   }
 
   try {
-    const stripe = getStripe();
     const admin = getAdmin();
     const origin = new URL(req.url).origin;
 
@@ -28,21 +27,13 @@ export async function POST(req: Request) {
     let accountId: string | undefined = existing?.stripe_account_id;
 
     if (!accountId) {
-      const account = await stripe.accounts.create({
-        type: "express",
-        email,
-        capabilities: {
-          card_payments: { requested: true },
-          transfers: { requested: true },
-        },
-        metadata: { seller_email: email, app: "mini-marketplace" },
-      });
+      const newId = await createConnectedAccount(email);
 
       const { error } = await admin.from("sellers").insert({
         email,
-        stripe_account_id: account.id,
-        charges_enabled: account.charges_enabled,
-        details_submitted: account.details_submitted,
+        stripe_account_id: newId,
+        charges_enabled: false,
+        details_submitted: false,
       });
 
       if (error) {
@@ -57,18 +48,11 @@ export async function POST(req: Request) {
         }
         if (!accountId) throw new Error(`Saving seller failed: ${error.message}`);
       } else {
-        accountId = account.id;
+        accountId = newId;
       }
     }
 
-    const link = await stripe.accountLinks.create({
-      account: accountId,
-      type: "account_onboarding",
-      refresh_url: `${origin}/api/stripe/connect/refresh?account=${accountId}`,
-      return_url: `${origin}/connect/return?account=${accountId}`,
-    });
-
-    return NextResponse.json({ url: link.url });
+    return NextResponse.json({ url: await createOnboardingLink(accountId, origin) });
   } catch (err) {
     console.error("connect failed", err);
     return NextResponse.json({ error: "Could not start Stripe onboarding. Try again." }, { status: 500 });

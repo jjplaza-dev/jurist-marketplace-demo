@@ -6,12 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="0cf5e23e-4149-45e1-ab83-2481983db91d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/item/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/item/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Header.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ListingCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/ListingCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/create-webhook.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/create-webhook.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/stripe/connect/refresh/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/stripe/connect/refresh/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/stripe/connect/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/stripe/connect/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/stripe/webhook/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/stripe/webhook/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/connect/return/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/connect/return/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/payments.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/payments.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/stripe.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/stripe.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/lib/supabase-admin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib/supabase-admin.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

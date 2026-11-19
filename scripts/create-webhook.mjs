@@ -9,7 +9,7 @@ import Stripe from "stripe";
 
 const base = process.argv[2] ?? process.env.APP_URL;
 if (!base || !/^https:\/\//.test(base)) {
-  console.error("Usage: node --env-file=.env.local scripts/create-webhook.mjs https://jurist-marketplace-demo.vercel.app/");
+  console.error("Usage: node --env-file=.env.local scripts/create-webhook.mjs https://YOUR-APP.vercel.app");
   process.exit(1);
 }
 

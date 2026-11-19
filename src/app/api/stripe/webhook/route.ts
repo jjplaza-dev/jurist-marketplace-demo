@@ -1,6 +1,6 @@
 import type Stripe from "stripe";
 import { NextResponse } from "next/server";
-import { fulfillCheckoutSession, saveAccountState } from "@/lib/payments";
+import { fulfillCheckoutSession, refreshSeller } from "@/lib/payments";
 import { getStripe } from "@/lib/stripe";
 
 // Connect webhook (registered with connect: true). Events come from the seller's
@@ -37,7 +37,9 @@ export async function POST(req: Request) {
         break;
       }
       case "account.updated": {
-        await saveAccountState(event.data.object as Stripe.Account); // no-op for unknown accounts
+        // Just a nudge to re-check: refreshSeller asks Stripe (Accounts v2) for the real
+        // state, and skips accounts that aren't ours.
+        await refreshSeller((event.data.object as Stripe.Account).id);
         break;
       }
       default:

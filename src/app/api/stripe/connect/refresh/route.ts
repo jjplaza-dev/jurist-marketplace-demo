@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getStripe } from "@/lib/stripe";
+import { createOnboardingLink } from "@/lib/stripe";
 import { getAdmin } from "@/lib/supabase-admin";
 
 // Stripe sends the seller here when an onboarding link expired or was already used.
@@ -19,13 +19,7 @@ export async function GET(req: Request) {
       .maybeSingle();
     if (!seller) return fallback;
 
-    const link = await getStripe().accountLinks.create({
-      account: accountId,
-      type: "account_onboarding",
-      refresh_url: `${url.origin}/api/stripe/connect/refresh?account=${accountId}`,
-      return_url: `${url.origin}/connect/return?account=${accountId}`,
-    });
-    return NextResponse.redirect(link.url);
+    return NextResponse.redirect(await createOnboardingLink(accountId, url.origin));
   } catch (err) {
     console.error("connect refresh failed", err);
     return fallback;

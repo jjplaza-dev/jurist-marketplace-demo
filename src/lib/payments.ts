@@ -1,6 +1,6 @@
 import type Stripe from "stripe";
 import { getAdmin } from "@/lib/supabase-admin";
-import { getStripe, MIN_CHARGE_CENTS, toCents } from "@/lib/stripe";
+import { isAccountReady, MIN_CHARGE_CENTS, toCents } from "@/lib/stripe";
 
 export const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -41,22 +41,32 @@ export async function getSeller(email: string): Promise<SellerRow | null> {
   if (!seller || seller.charges_enabled) return seller;
 
   try {
-    const account = await getStripe().accounts.retrieve(seller.stripe_account_id);
-    return await saveAccountState(account);
-  } catch {
+    return (await refreshSeller(seller.stripe_account_id)) ?? seller;
+  } catch (err) {
+    console.error("seller refresh failed", err);
     return seller;
   }
 }
 
-/** Persists charges_enabled / details_submitted for a connected account we know about. */
-export async function saveAccountState(account: Stripe.Account): Promise<SellerRow | null> {
-  const { data } = await getAdmin()
+/**
+ * Asks Stripe whether a connected account can take card payments and saves the answer.
+ * Accounts that aren't one of our sellers are skipped without calling Stripe (the sandbox
+ * is shared, so webhooks can mention accounts that belong to other apps).
+ */
+export async function refreshSeller(accountId: string): Promise<SellerRow | null> {
+  const admin = getAdmin();
+  const { data: known } = await admin
     .from("sellers")
-    .update({
-      charges_enabled: account.charges_enabled,
-      details_submitted: account.details_submitted,
-    })
-    .eq("stripe_account_id", account.id)
+    .select("stripe_account_id")
+    .eq("stripe_account_id", accountId)
+    .maybeSingle();
+  if (!known) return null;
+
+  const ready = await isAccountReady(accountId);
+  const { data } = await admin
+    .from("sellers")
+    .update({ charges_enabled: ready, details_submitted: ready })
+    .eq("stripe_account_id", accountId)
     .select("email, stripe_account_id, charges_enabled, details_submitted")
     .maybeSingle();
   return (data as SellerRow | null) ?? null;
